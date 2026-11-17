@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upcoming Changes — Tab Mockup</title>
+  <style>
+    /* ── Reset / base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #1d1d1d;
+      background: #f8f8f8;
+    }
+    a { color: #006699; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Page shell ── */
+    .admin-page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px 64px;
+    }
+
+    /* ── Breadcrumbs ── */
+    .breadcrumbs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #787878;
+      margin-bottom: 20px;
+    }
+    .breadcrumbs a { color: #787878; }
+    .breadcrumbs .sep { color: #bbb; }
+
+    /* ── Page header ── */
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1d1d1d;
+      margin-bottom: 6px;
+    }
+    .page-header .description {
+      font-size: 13px;
+      color: #787878;
+      max-width: 680px;
+    }
+    .page-header .learn-more { font-size: 13px; }
+
+    /* ── Tabs ── */
+    .d-nav-tabs {
+      display: flex;
+      border-bottom: 2px solid #e3e3e3;
+      margin-bottom: 20px;
+      gap: 0;
+    }
+    .d-nav-tabs .tab {
+      padding: 10px 18px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: #595959;
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .d-nav-tabs .tab:hover { color: #1d1d1d; }
+    .d-nav-tabs .tab.active {
+      color: #1d1d1d;
+      border-bottom-color: #0088cc;
+      font-weight: 600;
+    }
+    .tab-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 10px;
+      background: #e8e8e8;
+      font-size: 11px;
+      font-weight: 600;
+      color: #595959;
+    }
+    .tab.active .tab-count {
+      background: #0088cc;
+      color: #fff;
+    }
+    /* "Action needed" tab gets an amber indicator when non-empty */
+    .tab.action-needed .tab-count {
+      background: #f5a623;
+      color: #fff;
+    }
+    .tab.action-needed.active .tab-count {
+      background: #c8810d;
+      color: #fff;
+    }
+
+    /* ── Tab description banner ── */
+    .tab-description {
+      font-size: 13px;
+      color: #595959;
+      background: #f1f4f6;
+      border: 1px solid #dde3e8;
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      max-width: 740px;
+    }
+    .tab-description.warning {
+      background: #fff9ed;
+      border-color: #f5c060;
+      color: #7a5000;
+    }
+
+    /* ── Filter bar ── */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .filter-bar input[type=text] {
+      flex: 1;
+      min-width: 180px;
+      max-width: 300px;
+      padding: 7px 11px;
+      border: 1px solid #c8c8c8;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #1d1d1d;
+      background: #fff;
+    }
+    .filter-bar input[type=text]:focus { outline: none; border-color: #0088cc; }
+    .filter-bar select {
+      padding: 7px 11px;
+      border: 1px solid #c8c8c8;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #1d1d1d;
+      background: #fff;
+      cursor: pointer;
+    }
+    .filter-bar .sort-label {
+      font-size: 12px;
+      color: #787878;
+      margin-left: 4px;
+    }
+
+    /* ── Table ── */
+    .d-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .d-table__header { background: #f5f5f5; }
+    .d-table__header-cell {
+      padding: 10px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #787878;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      text-align: left;
+      border-bottom: 1px solid #e3e3e3;
+    }
+    .d-table__row { border-bottom: 1px solid #efefef; }
+    .d-table__row:last-child { border-bottom: none; }
+    .d-table__row:hover { background: #fafafa; }
+
+    /* Highlight rows that need action (opted out, stable→permanent) */
+    .d-table__row.needs-action {
+      border-left: 3px solid #f5a623;
+      background: #fffcf4;
+    }
+    .d-table__row.needs-action:hover { background: #fff8e8; }
+
+    .d-table__cell {
+      padding: 14px 14px;
+      vertical-align: top;
+    }
+    .d-table__cell.--overview { width: 55%; }
+    .d-table__cell.--detail { width: 22.5%; vertical-align: middle; }
+
+    /* ── Overview cell internals ── */
+    .upcoming-change__notices { margin-bottom: 7px; }
+    .upcoming-change__status-notice,
+    .upcoming-change__depends-on-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 12px;
+      color: #c8810d;
+      background: #fff9ed;
+      border: 1px solid #f5c060;
+      border-radius: 4px;
+      padding: 6px 10px;
+      margin-bottom: 4px;
+    }
+    .notice-icon { flex-shrink: 0; }
+
+    .d-table__overview-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1d1d1d;
+      margin-bottom: 3px;
+    }
+    .d-table__overview-about {
+      font-size: 12.5px;
+      color: #595959;
+      margin-bottom: 6px;
+      max-width: 520px;
+    }
+
+    .upcoming-change__links {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 7px;
+    }
+    .upcoming-change__link {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .link-icon { font-size: 10px; opacity: 0.7; }
+
+    /* ── Badges ── */
+    .upcoming-change-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 4px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .badge--stable    { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .badge--beta      { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+    .badge--alpha     { background: #f3e5f5; color: #6a1b9a; border: 1px solid #ce93d8; }
+    .badge--experimental { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+    .badge--permanent { background: #f1f8e9; color: #33691e; border: 1px solid #aed581; }
+    .badge--feature   { background: #f5f5f5; color: #595959; border: 1px solid #ddd; }
+    .badge--plugin    { background: #fce4ec; color: #880e4f; border: 1px solid #f48fb1; }
+    .badge--warning   { background: #fff9ed; color: #c8810d; border: 1px solid #f5c060; }
+
+    /* ── Group control cell ── */
+    .group-control {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .group-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      background: #e8f0fe;
+      color: #1a56db;
+      border: 1px solid #bcd0fb;
+    }
+    .group-pill.locked { background: #f5f5f5; color: #787878; border-color: #ddd; }
+    .group-edit-btn {
+      font-size: 11px;
+      color: #0088cc;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-top: 4px;
+      display: block;
+    }
+
+    /* ── Toggle switch ── */
+    .toggle-wrap { display: flex; align-items: center; }
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      border-radius: 20px;
+      background: #c8c8c8;
+      transition: background 0.2s;
+    }
+    .toggle-slider::before {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      left: 3px;
+      top: 3px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .toggle input:checked + .toggle-slider { background: #0088cc; }
+    .toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
+    .toggle input:disabled + .toggle-slider { opacity: 0.5; cursor: default; }
+
+    /* ── Tab panels ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: #787878;
+      font-size: 14px;
+    }
+    .empty-state .empty-icon { font-size: 32px; margin-bottom: 10px; opacity: 0.4; }
+
+    /* ── Opted-out callout inside Action Needed ── */
+    .opted-out-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #c8810d;
+      background: #fff3cd;
+      border: 1px solid #f5c060;
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+<div class="admin-page">
+
+  <!-- Breadcrumbs -->
+  <div class="breadcrumbs">
+    <a href="#">Admin</a>
+    <span class="sep">›</span>
+    <span>Upcoming Changes</span>
+  </div>
+
+  <!-- Page header -->
+  <div class="page-header">
+    <h1>Upcoming Changes</h1>
+    <p class="description">
+      Review features that are rolling out or in testing. Enable them early, adjust who has access, or opt out before they become permanent.
+      <a class="learn-more" href="#">Learn more ↗</a>
+    </p>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TABS
+       Tab order = admin priority (most urgent first)
+       ══════════════════════════════════════════ -->
+  <div class="d-nav-tabs" role="tablist">
+    <button class="tab action-needed active" role="tab" onclick="switchTab('action-needed', this)">
+      Action needed
+      <span class="tab-count">3</span>
+    </button>
+    <button class="tab" role="tab" onclick="switchTab('rolling-out', this)">
+      Rolling out
+      <span class="tab-count">12</span>
+    </button>
+    <button class="tab" role="tab" onclick="switchTab('early-access', this)">
+      Early access
+      <span class="tab-count">5</span>
+    </button>
+    <button class="tab" role="tab" onclick="switchTab('permanent', this)">
+      Permanent
+      <span class="tab-count">8</span>
+    </button>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════
+       TAB 1 — Action needed
+       Stable changes that will become Permanent.
+       Opted-out ones appear first, highlighted.
+       ══════════════════════════════════════════ -->
+  <div id="tab-action-needed" class="tab-panel active">
+
+    <div class="tab-description warning">
+      ⚠️ These features are <strong>stable</strong> and will become <strong>permanent</strong> soon.
+      If you've opted out, test them now and let us know if there are any issues before they're switched on for everyone.
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <input type="text" placeholder="Search changes…" />
+      <select><option>All types</option><option>Feature</option><option>Setting default</option><option>Other</option></select>
+      <select><option>All audiences</option><option>All members</option><option>Staff</option><option>Admins</option></select>
+      <select><option>All</option><option>Enabled</option><option>Disabled</option></select>
+      <span class="sort-label">Sort:</span>
+      <select><option>Recently updated</option><option>Name</option></select>
+    </div>
+
+    <table class="d-table">
+      <thead class="d-table__header">
+        <tr>
+          <th class="d-table__header-cell">Name</th>
+          <th class="d-table__header-cell">Availability</th>
+          <th class="d-table__header-cell">Enabled</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Opted-out row — gets the amber highlight -->
+        <tr class="d-table__row needs-action">
+          <td class="d-table__cell --overview">
+            <div class="upcoming-change__notices">
+              <div class="upcoming-change__status-notice">
+                <span class="notice-icon">⚠</span>
+                This feature is stable and will become permanent. Test it and let us know if there are issues.
+              </div>
+            </div>
+            <div class="d-table__overview-name">New navigation menu</div>
+            <div class="d-table__overview-about">
+              Replaces the hamburger menu with a persistent sidebar. Affects all logged-in users.
+            </div>
+            <div class="upcoming-change__links">
+              <span class="upcoming-change__link">
+                <span class="link-icon">🖼</span>
+                <a href="#">Preview</a>
+              </span>
+              <span class="upcoming-change__link">
+                <span class="link-icon">↗</span>
+                <a href="#">Feedback</a>
+              </span>
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--stable">Stable</span>
+              <span class="badge badge--feature">Feature</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill locked">— Disabled —</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Another opted-out row -->
+        <tr class="d-table__row needs-action">
+          <td class="d-table__cell --overview">
+            <div class="upcoming-change__notices">
+              <div class="upcoming-change__status-notice">
+                <span class="notice-icon">⚠</span>
+                This feature is stable and will become permanent. Test it and let us know if there are issues.
+              </div>
+            </div>
+            <div class="d-table__overview-name">Post voting (reactions)</div>
+            <div class="d-table__overview-about">
+              Allows members to react to posts with emoji. Requires the post-voting component.
+            </div>
+            <div class="upcoming-change__links">
+              <span class="upcoming-change__link">
+                <span class="link-icon">↗</span>
+                <a href="#">Feedback</a>
+              </span>
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--stable">Stable</span>
+              <span class="badge badge--feature">Feature</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill locked">— Disabled —</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Enabled row — still in this tab, not opted out, but stable→permanent -->
+        <tr class="d-table__row">
+          <td class="d-table__cell --overview">
+            <div class="d-table__overview-name">Improved search results page</div>
+            <div class="d-table__overview-about">
+              Redesigned search results with filters for date range, category, and poster.
+            </div>
+            <div class="upcoming-change__links">
+              <span class="upcoming-change__link">
+                <span class="link-icon">🖼</span>
+                <a href="#">Preview</a>
+              </span>
+              <span class="upcoming-change__link">
+                <span class="link-icon">↗</span>
+                <a href="#">Feedback</a>
+              </span>
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--stable">Stable</span>
+              <span class="badge badge--feature">Feature</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill">Everyone</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div><!-- /tab-action-needed -->
+
+
+  <!-- ══════════════════════════════════════════
+       TAB 2 — Rolling out
+       Beta + Stable (not going Permanent).
+       On by default; admins can opt out.
+       ══════════════════════════════════════════ -->
+  <div id="tab-rolling-out" class="tab-panel">
+
+    <div class="tab-description">
+      These features are <strong>on by default</strong> for new installs and rolling out to existing sites.
+      You can turn them off if something isn't working as expected.
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" placeholder="Search changes…" />
+      <select><option>All types</option><option>Feature</option><option>Setting default</option><option>Other</option></select>
+      <select><option>All audiences</option><option>All members</option><option>Staff</option><option>Admins</option></select>
+      <select><option>All</option><option>Enabled</option><option>Disabled</option></select>
+      <span class="sort-label">Sort:</span>
+      <select><option>Recently updated</option><option>Name</option><option>Status</option></select>
+    </div>
+
+    <table class="d-table">
+      <thead class="d-table__header">
+        <tr>
+          <th class="d-table__header-cell">Name</th>
+          <th class="d-table__header-cell">Availability</th>
+          <th class="d-table__header-cell">Enabled</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="d-table__row">
+          <td class="d-table__cell --overview">
+            <div class="d-table__overview-name">Topic summarization with AI</div>
+            <div class="d-table__overview-about">
+              Adds a "Summarize" button to long topics. Requires an AI provider to be configured.
+            </div>
+            <div class="upcoming-change__links">
+              <span class="upcoming-change__link">
+                <span class="link-icon">🖼</span>
+                <a href="#">Preview</a>
+              </span>
+              <span class="upcoming-change__link">
+                <span class="link-icon">↗</span>
+                <a href="#">Feedback</a>
+              </span>
+              <span class="upcoming-change__link">
+                <span class="link-icon">⚙</span>
+                <a href="#">Settings</a>
+              </span>
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--beta">Beta</span>
+              <span class="badge badge--feature">Feature</span>
+              <span class="badge badge--plugin">ai</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill">Everyone</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="d-table__row">
+          <td class="d-table__cell --overview">
+            <div class="d-table__overview-name">Redesigned composer toolbar</div>
+            <div class="d-table__overview-about">
+              A cleaner composer toolbar with consolidated formatting options and an overflow menu.
+            </div>
+            <div class="upcoming-change__links">
+              <span class="upcoming-change__link">
+                <span class="link-icon">🖼</span>
+                <a href="#">Preview</a>
+              </span>
+              <span class="upcoming-change__link">
+                <span class="link-icon">↗</span>
+                <a href="#">Feedback</a>
+              </span>
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--stable">Stable</span>
+              <span class="badge badge--feature">Feature</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill">Staff</span>
+              <span class="group-pill">trust_level_1</span>
+            </div>
+            <button class="group-edit-btn">Edit groups…</button>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="d-table__row">
+          <td class="d-table__cell --overview">
+            <div class="d-table__overview-name">Default email digest frequency</div>
+            <div class="d-table__overview-about">
+              Changes the default digest frequency for new users from weekly to daily.
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--beta">Beta</span>
+              <span class="badge badge--feature">Setting default</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill locked">All users (locked)</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div><!-- /tab-rolling-out -->
+
+
+  <!-- ══════════════════════════════════════════
+       TAB 3 — Early access
+       Experimental + Alpha.
+       Available for testing; low priority to act.
+       ══════════════════════════════════════════ -->
+  <div id="tab-early-access" class="tab-panel">
+
+    <div class="tab-description">
+      These features are in early testing and <strong>off by default</strong>.
+      You can enable them for specific groups to test before they roll out more broadly.
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" placeholder="Search changes…" />
+      <select><option>All types</option><option>Feature</option><option>Setting default</option><option>Other</option></select>
+      <select><option>All audiences</option><option>All members</option><option>Staff</option><option>Admins</option></select>
+      <select><option>All</option><option>Enabled</option><option>Disabled</option></select>
+      <span class="sort-label">Sort:</span>
+      <select><option>Recently updated</option><option>Name</option><option>Status</option></select>
+    </div>
+
+    <table class="d-table">
+      <thead class="d-table__header">
+        <tr>
+          <th class="d-table__header-cell">Name</th>
+          <th class="d-table__header-cell">Availability</th>
+          <th class="d-table__header-cell">Enabled</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="d-table__row">
+          <td class="d-table__cell --overview">
+            <div class="d-table__overview-name">Chat threads v2</div>
+            <div class="d-table__overview-about">
+              Adds collapsible threads within chat channels. Requires the chat plugin.
+            </div>
+            <div class="upcoming-change__links">
+              <span class="upcoming-change__link">
+                <span class="link-icon">🖼</span>
+                <a href="#">Preview</a>
+              </span>
+              <span class="upcoming-change__link">
+                <span class="link-icon">↗</span>
+                <a href="#">Feedback</a>
+              </span>
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--alpha">Alpha</span>
+              <span class="badge badge--feature">Feature</span>
+              <span class="badge badge--plugin">chat</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill">Staff</span>
+            </div>
+            <button class="group-edit-btn">Edit groups…</button>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" checked />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="d-table__row">
+          <td class="d-table__cell --overview">
+            <div class="d-table__overview-name">Semantic search</div>
+            <div class="d-table__overview-about">
+              AI-powered search that understands meaning, not just keywords. Requires an AI provider.
+            </div>
+            <div class="upcoming-change__links">
+              <span class="upcoming-change__link">
+                <span class="link-icon">↗</span>
+                <a href="#">Feedback</a>
+              </span>
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--experimental">Experimental</span>
+              <span class="badge badge--feature">Feature</span>
+              <span class="badge badge--plugin">ai</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill locked">— Disabled —</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="d-table__row">
+          <td class="d-table__cell --overview">
+            <div class="d-table__overview-name">Inline topic translation</div>
+            <div class="d-table__overview-about">
+              Translate individual posts in-place with a single click.
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--alpha">Alpha</span>
+              <span class="badge badge--feature">Feature</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill locked">— Disabled —</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div><!-- /tab-early-access -->
+
+
+  <!-- ══════════════════════════════════════════
+       TAB 4 — Permanent
+       Features that have been locked in.
+       Most admins won't need to act here.
+       ══════════════════════════════════════════ -->
+  <div id="tab-permanent" class="tab-panel">
+
+    <div class="tab-description">
+      These features have been <strong>permanently enabled</strong> and can no longer be turned off.
+      If you had opted out, they were switched back on when they became permanent.
+    </div>
+
+    <div class="filter-bar">
+      <input type="text" placeholder="Search changes…" />
+      <select><option>All types</option><option>Feature</option><option>Setting default</option><option>Other</option></select>
+      <span class="sort-label">Sort:</span>
+      <select><option>Recently updated</option><option>Name</option></select>
+    </div>
+
+    <table class="d-table">
+      <thead class="d-table__header">
+        <tr>
+          <th class="d-table__header-cell">Name</th>
+          <th class="d-table__header-cell">Availability</th>
+          <th class="d-table__header-cell">Enabled</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="d-table__row">
+          <td class="d-table__cell --overview">
+            <div class="d-table__overview-name">Topic list redesign</div>
+            <div class="d-table__overview-about">
+              Updated topic list layout with improved information density and visual hierarchy.
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--permanent">Permanent</span>
+              <span class="badge badge--feature">Feature</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill locked">Everyone (locked)</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" checked disabled />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+        <tr class="d-table__row">
+          <td class="d-table__cell --overview">
+            <div class="d-table__overview-name">Improved onboarding wizard</div>
+            <div class="d-table__overview-about">
+              Streamlined setup wizard with fewer steps and smarter defaults.
+            </div>
+            <div class="upcoming-change-badges">
+              <span class="badge badge--permanent">Permanent</span>
+              <span class="badge badge--feature">Feature</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="group-control">
+              <span class="group-pill locked">Admins (locked)</span>
+            </div>
+          </td>
+          <td class="d-table__cell --detail">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input type="checkbox" checked disabled />
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div><!-- /tab-permanent -->
+
+</div><!-- /admin-page -->
+
+<script>
+  function switchTab(id, btn) {
+    // hide all panels
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    // deactivate all tabs
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    // show selected
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
